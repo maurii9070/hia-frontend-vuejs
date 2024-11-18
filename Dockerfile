@@ -1,17 +1,7 @@
-FROM bitnami/node:18 as build
-
+FROM node:22-alpine
 WORKDIR /app
-
+COPY package*.json ./
+RUN npm install
 COPY . .
-
-RUN npm install && npm run build
-
-FROM caddy:latest
-
-COPY Caddyfile /etc/caddy/Caddyfile
-
-COPY --from=build /app/dist /app
-
-EXPOSE 80
-
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
